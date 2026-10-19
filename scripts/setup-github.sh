@@ -7,7 +7,10 @@
 #   cannot approve its own PRs or bypass the rulesets)
 # - Creates two rulesets:
 #     main:       PR required, 1 approval from a code owner (you), approval must
-#                 come after the last push, required checks, no force push or deletion
+#                 come after the last push, required checks, no force push or deletion.
+#                 Repo admins (you) may bypass via a PR only, so your own
+#                 governance/* PRs can merge (GitHub won't let you approve your own PR).
+#                 Bot PRs still need your approval; the bot is not an admin.
 #     feature/*:  no force push (task merges are gated by the merge guard)
 #
 # Rulesets are free on public repos. Private repos need GitHub Pro/Team.
@@ -55,7 +58,7 @@ gh api -X POST "repos/$REPO/rulesets" --input - >/dev/null <<'JSON'
         "required_status_checks": [ { "context": "build-test" }, { "context": "governance" } ]
       } }
   ],
-  "bypass_actors": []
+  "bypass_actors": [ { "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "pull_request" } ]
 }
 JSON
 

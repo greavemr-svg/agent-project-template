@@ -23,6 +23,14 @@ jobs:
           fail=0
           err() { echo "::error::$1"; fail=1; }
 
+          # Dependabot updates: routine, small, still need green CI and owner approval
+          case "$HEAD" in
+            dependabot/*)
+              echo "$TITLE" | grep -Eq '^(build|ci|chore)(\([a-z0-9._/-]+\))?: .+' \
+                || err "Dependabot PR title should start with build:, ci: or chore:."
+              exit $fail ;;
+          esac
+
           # 1. Conventional Commit title
           echo "$TITLE" | grep -Eq '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release)(\([a-z0-9._/-]+\))?!?: .+' \
             || err "PR title must be a Conventional Commit, e.g. 'feat(rota): add overlap check'."
@@ -35,7 +43,7 @@ jobs:
           case "$BASE" in
             main)
               case "$HEAD" in
-                feature/*|governance/*|hotfix/*) ;;
+                feature/*|governance/*|hotfix/*|dependabot/*) ;;
                 *) err "Only feature/*, governance/* or hotfix/* branches may target main (this is $HEAD)." ;;
               esac ;;
             feature/*)

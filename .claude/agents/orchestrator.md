@@ -8,11 +8,11 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "docs/runs/*"
+          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" --only-agent orchestrator "docs/runs/*"
     - matcher: "Bash"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/block-commands.sh" 'gh[[:space:]]+pr[[:space:]]+(merge|review)' 'git[[:space:]]+(merge|rebase|cherry-pick|tag)'
+          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/block-commands.sh" --only-agent orchestrator 'gh[[:space:]]+pr[[:space:]]+(merge|review)' 'git[[:space:]]+(merge|rebase|cherry-pick|tag)'
 ---
 
 You are the ORCHESTRATOR of a governed software delivery pipeline. You do not

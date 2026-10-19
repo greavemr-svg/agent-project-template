@@ -5,6 +5,14 @@
 # shellcheck source=lib.sh
 . "$(dirname "$0")/lib.sh"
 
+# --only-agent <name>: this rule belongs to one agent. The main-session agent's
+# frontmatter hooks also fire inside subagents, so skip when another agent is acting.
+if [ "${1:-}" = "--only-agent" ]; then
+  acting="$(hook_field '.agent_type')"
+  [ -n "$acting" ] && [ "$acting" != "$2" ] && exit 0
+  shift 2
+fi
+
 path="$(target_rel_path)"
 [ -z "$path" ] && exit 0
 
