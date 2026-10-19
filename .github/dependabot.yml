@@ -1,0 +1,8 @@
+# Keeps GitHub Actions up to date. After the bootstrap run picks a stack, add
+# that ecosystem here (e.g. gradle, npm, pip) through a governance/* PR.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

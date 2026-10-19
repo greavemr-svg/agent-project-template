@@ -1,0 +1,7 @@
+# Governance kit defaults. The bootstrap run adds stack-specific entries.
+.governance/
+.claude/settings.local.json
+.env
+.env.*
+*.keystore
+*.jks

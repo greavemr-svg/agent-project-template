@@ -1,0 +1,11 @@
+# Keep Unix line endings on scripts and config, so the hooks work in Git Bash
+# on Windows (CRLF line endings break bash scripts).
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.jar binary
+*.keystore binary
+*.jks binary

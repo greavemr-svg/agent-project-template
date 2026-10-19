@@ -1,0 +1,52 @@
+{
+  "run_id": "",
+  "idea": "",
+  "status": "in_progress",
+  "stage": "plan",
+  "created_at": "",
+  "epic_issue": null,
+  "feature_branch": "",
+  "artifacts": {
+    "spec": "",
+    "design": "",
+    "adrs": [],
+    "audit": ""
+  },
+  "gates": {
+    "G1": null,
+    "spec_approval": null,
+    "G2": null,
+    "G4": null,
+    "G5": null,
+    "release_approval": null
+  },
+  "tasks": [],
+  "release": {
+    "version": "",
+    "pr": null,
+    "tag": "",
+    "url": ""
+  },
+  "counters": {
+    "agent_invocations": 0
+  },
+  "log": [],
+  "_examples": {
+    "task": {
+      "n": 1,
+      "title": "",
+      "issue": null,
+      "branch": "",
+      "pr": null,
+      "status": "pending | in_progress | done | descoped",
+      "attempts": 0,
+      "G3": null
+    },
+    "gate_result": {
+      "result": "PASS",
+      "at": "2026-01-01T12:00:00Z",
+      "evidence": "gatekeeper JSON or owner's words verbatim"
+    },
+    "log_entry": "2026-01-01T12:00:00Z developer T1 attempt 1: DONE PR #12"
+  }
+}

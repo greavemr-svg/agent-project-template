@@ -1,0 +1,20 @@
+name: Idea
+description: An idea for the pipeline to plan and build
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What you want, in your own words. The planner turns this into a spec.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints or must-haves
+      description: Deadlines, platforms, things it must or must not do.

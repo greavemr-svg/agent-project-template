@@ -1,0 +1,63 @@
+name: Governance
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  governance:
+    name: governance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR against the delivery rules
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          BASE: ${{ github.event.pull_request.base.ref }}
+          HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          fail=0
+          err() { echo "::error::$1"; fail=1; }
+
+          # 1. Conventional Commit title
+          echo "$TITLE" | grep -Eq '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release)(\([a-z0-9._/-]+\))?!?: .+' \
+            || err "PR title must be a Conventional Commit, e.g. 'feat(rota): add overlap check'."
+
+          # 2. Linked issue
+          echo "$BODY" | grep -Eiq '(closes|fixes|resolves) #[0-9]+' \
+            || err "PR body must link an issue with 'Closes #<n>'."
+
+          # 3. Branch flow
+          case "$BASE" in
+            main)
+              case "$HEAD" in
+                feature/*|governance/*|hotfix/*) ;;
+                *) err "Only feature/*, governance/* or hotfix/* branches may target main (this is $HEAD)." ;;
+              esac ;;
+            feature/*)
+              run="${BASE#feature/}"
+              case "$HEAD" in
+                "task/$run-"*) ;;
+                *) err "Only task/$run-* branches may target $BASE (this is $HEAD)." ;;
+              esac ;;
+          esac
+
+          # 4. Spec link for pipeline work
+          case "$HEAD" in
+            feature/*|task/*)
+              echo "$BODY" | grep -q 'docs/specs/' || err "Pipeline PRs must reference their spec in docs/specs/." ;;
+          esac
+
+          # 5. Release PRs: checklist fully ticked
+          if [ "$BASE" = "main" ] && [ "${HEAD#feature/}" != "$HEAD" ]; then
+            echo "$BODY" | grep -q 'Release checklist' || err "Release PR must include the release checklist."
+            if echo "$BODY" | grep -Eq '^[[:space:]]*- \[ \]'; then
+              err "Release checklist has unticked items."
+            fi
+          fi
+
+          exit $fail

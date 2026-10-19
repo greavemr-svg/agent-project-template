@@ -1,0 +1,9 @@
+# The owner must approve every change to main (enforced by the ruleset's
+# "require code owner review"). Governance paths are listed explicitly so the
+# rule stays even if the catch-all is ever narrowed.
+*                    @greavemr-svg
+/.claude/            @greavemr-svg
+/.github/            @greavemr-svg
+/docs/governance/    @greavemr-svg
+/CLAUDE.md           @greavemr-svg
+/docs/perf/baseline.json @greavemr-svg
