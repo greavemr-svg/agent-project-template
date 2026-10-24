@@ -9,7 +9,9 @@ a `governance/*` branch PR.
 |---|---|---|---|
 | orchestrator | Routing, run state, human gates | `docs/runs/` | Design, code, test, review, merge |
 | planner | Spec | `docs/specs/` | Design the solution |
-| architect | Design, ADRs, task breakdown | `docs/design/`, `docs/adr/` | Change requirements, write code |
+| ux-designer | User flows, screen specs, design system (from Figma when supplied) | `docs/ux/` | Change requirements, override Figma |
+| architect | Design, ADRs, task breakdown | `docs/design/`, `docs/adr/`, `docs/project.md` | Change requirements, write code |
+| threat-modeler | Threat model, security profile, security requirements | `docs/security/` | Accept risk, weaken the profile |
 | developer | Implementation, PR | Application code + unit tests | Merge, approve, touch governance |
 | tester | Acceptance and edge-case tests | Test files only | Change application code |
 | reviewer | Code review verdict | Nothing (read-only) | Change code, approve on GitHub |
@@ -26,7 +28,8 @@ owner approves what reaches `main`.
 ## Flow
 
 ```
-idea → planner → G1 → GATE A (owner) → architect → G2
+idea → planner → G1 → GATE A (owner: spec)
+     → ux-designer → architect → threat-modeler (↺ architect) → G2 → GATE D (owner: design + residual risk)
      → per task: developer → tester → reviewer → G3 → merge into feature/<run>
      → security + performance → G4
      → release(prepare) → auditor → G5 → GATE B (owner, on GitHub)
@@ -34,10 +37,10 @@ idea → planner → G1 → GATE A (owner) → architect → G2
 ```
 
 New projects: the first run is a **bootstrap run** (when `docs/project.md`
-says `NOT SET UP`). It adds a stack checkpoint for the owner after G2, and its
+says `NOT SET UP`). Its Gate D also covers the stack, and its
 first task is a walking skeleton. See the orchestrator's bootstrap section.
 
-Retries: max 3 attempts per task, then the owner decides. Max 8 tasks and 60
+Retries: max 3 attempts per task, then the owner decides. Max 8 tasks and 120
 agent invocations per run.
 
 ## Gate criteria
@@ -52,23 +55,33 @@ evidence.
 - G1.4 Out-of-scope items are listed.
 - G1.5 Non-functional requirements are listed, or "none beyond project defaults" is stated.
 - G1.6 Data and privacy impact is stated (what personal data, if any, is created, stored or sent).
+- G1.8 "Design sources" is filled in: Figma links, exports, or "none".
 - G1.7 No TBD / TODO / open questions remain.
 - See also `definition-of-ready.md`.
 
 ### Gate A — owner approves the spec (human)
 - Owner approval recorded verbatim with UTC timestamp in `state.json`.
 
-### G2 — Design ready
+### G2 — Design ready (UX, architecture, threat model)
 - G2.1 `docs/design/<run-id>.md` exists and follows `docs/design/_template.md`.
 - G2.2 Every AC maps to at least one task; no task without an AC.
 - G2.3 Every task has: ACs, likely files, dependencies, size S or M.
 - G2.4 Task count is 1-8.
 - G2.5 Every new dependency, data-model change or hard-to-reverse decision has an ADR with status `Accepted`.
 - G2.6 Test strategy and security considerations sections are filled in.
+- G2.7 `docs/ux/<run-id>.md` exists; every AC has a flow and screen; every screen defines loading, empty, error and offline states (and permission-denied where relevant) and meets the accessibility rules; Figma discrepancies are resolved by the owner.
+- G2.8 Every UX screen is assigned to a task.
+- G2.9 `docs/security/<run-id>-threat-model.md` exists, follows the template, and states the security profile with a reason.
+- G2.10 Every threat rated Medium or above has at least one testable SR, mapped to a MASVS/ASVS control ID, a task and a verification method.
+- G2.11 No Critical threat is left as a residual risk; the principles check has no open finding.
 
-### Stack checkpoint — owner approves the stack (human, bootstrap runs only)
-- `docs/adr/0001-technology-stack.md` accepted and `docs/project.md` complete, approved by the owner and recorded in `state.json`.
+### Bootstrap runs
+- `docs/adr/0001-technology-stack.md` accepted and `docs/project.md` complete, approved by the owner at Gate D and recorded in `state.json`.
 - Task 1 is the walking skeleton and merges before any other task starts.
+
+### Gate D — owner approves the design and accepts residual risk (human)
+- Owner's approval of the screens, tasks and security profile, and explicit acceptance of each listed residual risk, recorded verbatim with UTC timestamp in `state.json`.
+- On bootstrap runs this is also the stack approval.
 
 ### G3 — Task done (per PR)
 - G3.1 PR targets `feature/<run-id>` from `task/<run-id>-<n>-<slug>`.
@@ -77,11 +90,14 @@ evidence.
 - G3.4 Tester report: all tests pass; every AC for this task has a named test; changed-lines coverage ≥ threshold in `docs/project.md`.
 - G3.5 Latest reviewer verdict is `VERDICT: APPROVE`, newer than the last commit, with no unresolved Blocker or Major.
 - G3.6 No files changed outside the task's scope without a stated reason; no unapproved dependency; no test skipped, deleted or weakened.
+- G3.7 Every SR assigned to the task is implemented and has a named `SR<n>_…` test, or a recorded review/tool check.
+- G3.8 Screens built in this task match the UX design, including all states.
 
 ### G4 — Feature done
 - G4.1 Every task is `done`, or `descoped` with the owner's recorded decision.
 - G4.2 CI is green on the head of `feature/<run-id>`.
 - G4.3 Security: zero open Critical or High findings.
+- G4.6 Security agent reports every SR verified and the threat model current.
 - G4.4 Performance: `PASS` or `NOT_APPLICABLE`; `NO_BASELINE` only with the proposed baseline recorded.
 - G4.5 Every AC in the spec traces to a merged PR and a test, or to a recorded descope.
 

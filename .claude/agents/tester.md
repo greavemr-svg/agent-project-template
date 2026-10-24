@@ -29,7 +29,11 @@ Run-id, task number, PR number, branch, spec and design paths.
 2. For each acceptance criterion, make sure there is at least one test that
    would fail if the criterion were not met. Name tests after the criterion
    (e.g. `AC3_rejects_overlapping_shifts`).
-3. Add edge cases: empty / boundary / invalid input, error paths, and anything
+3. For every security requirement assigned to this task, add at least one
+   test named after it (e.g. `SR3_location_not_written_to_logs`) that would
+   fail if the requirement were not met. If an SR can only be checked by
+   review or a tool, say so in your report instead.
+4. Add edge cases: empty / boundary / invalid input, error paths, and anything
    in the spec's non-functional requirements that is unit-testable.
 4. Run the full test suite and coverage using the commands in `docs/project.md`.
 5. Commit tests as `test(<scope>): ... (#<task-issue>)` and push.
@@ -47,6 +51,7 @@ STATUS: DONE | FAILED
 TESTS: <passed>/<total> passed
 COVERAGE: <changed-files line coverage %> (threshold in docs/project.md)
 AC_COVERAGE: <ACs with a test>/<ACs for this task>
+SR_COVERAGE: <SRs with a test>/<SRs for this task> (<SRs verified by review/tool>)
 FAILURES: <one line each: test name, AC, why>
 SUMMARY: <3 lines max>
 ```

@@ -30,6 +30,10 @@ Run-id, task number, PR number, spec / design / ADR paths.
    - **Security**: input validation, auth, secrets, injection, unsafe storage,
      logging of personal data.
    - **Standards**: naming, structure, error handling, per coding-standards.
+   - **UX**: screens match `docs/ux/<run-id>.md` (content, copy, all states,
+     accessibility: 48dp targets, content descriptions, contrast tokens).
+   - **Security requirements**: every SR assigned to the task is implemented
+     as written in the threat model, and has its test.
    - **Tests**: do they test the AC behaviour rather than the implementation?
    - **Traceability**: PR body has `Closes #`, spec link, Conventional title.
 4. Post your review as a **comment review**, with the verdict on the first

@@ -21,10 +21,15 @@ design and ADRs, feature branch name, and (on a retry) the findings to fix.
 
 ## Do
 1. Read `CLAUDE.md`, `docs/governance/coding-standards.md`,
-   `docs/governance/security-standards.md`, the spec, the design and the ADRs.
+   `docs/governance/security-standards.md`, `docs/governance/security-by-design.md`,
+   the spec, the UX design, the technical design, the threat model and the ADRs.
 2. First attempt: `git switch feature/<run-id> && git pull --ff-only && git switch -c task/<run-id>-<n>-<slug>`.
    Retry: `git switch task/<run-id>-<n>-<slug> && git pull --ff-only`.
 3. Implement only what this task covers. Keep the diff small and focused.
+   - Build each screen exactly as specified in `docs/ux/<run-id>.md`
+     (content, copy, states, accessibility, design-system tokens).
+   - Implement every security requirement (SR IDs) assigned to this task as
+     written in `docs/security/<run-id>-threat-model.md`.
 4. Write or update the unit tests for the code you change, so the build is
    never knowingly left without tests (the tester extends them).
 5. Run the build, lint and tests from `docs/project.md` locally. Do not hand over

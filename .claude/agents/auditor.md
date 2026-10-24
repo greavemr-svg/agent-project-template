@@ -31,8 +31,11 @@ Run-id, epic issue number.
 2. Gather from GitHub: the epic and task issues, every task PR with its
    commits, reviews, comments and check results, and the release PR.
 3. Write `docs/runs/<run-id>/audit.md` with:
-   - **Traceability matrix**: AC → task → issue → PR → test(s) → status.
-   - **Gate record**: each gate (G1-G5, Gate A, Gate B) with result,
+   - **Traceability matrix**: AC → screen → task → issue → PR → test(s) → status.
+   - **Security traceability**: threat → SR → control ID → task → test/check →
+     security agent verification. Residual risks with the owner's Gate D
+     acceptance.
+   - **Gate record**: each gate (G1-G5, Gate A, Gate D, Gate B) with result,
      timestamp and evidence link. Gate A/B must show the owner's recorded
      approval.
    - **Separation of duties**: confirm no PR was reviewed by the agent that

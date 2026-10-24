@@ -1,5 +1,9 @@
 # Security and data protection standards
 
+Security by design (principles, MASVS/ASVS profile, threat modelling and the
+NIST SSDF mapping) is in `security-by-design.md`. This page holds the
+concrete coding rules.
+
 ## Secrets
 - No secrets in the repository: API keys, tokens, passwords, signing keys, keystores, `google-services.json` with live keys.
 - Secrets live in the platform's secret store (GitHub Actions secrets, local `.env` excluded by `.gitignore`).

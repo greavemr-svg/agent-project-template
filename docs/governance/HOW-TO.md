@@ -2,11 +2,13 @@
 
 Give the orchestrator an idea and a team of Claude Code agents plans, designs,
 builds, tests, reviews, secures and releases it under work-grade governance. You
-are needed at two points (three on a new project): approving the spec, approving
-the tech stack (first run only), and approving the release on GitHub.
+are needed at three points: approving the spec (Gate A), approving the design
+and accepting any residual security risk (Gate D, which also covers the tech
+stack on a new project), and approving the release on GitHub (Gate B).
 
 ```
-idea ─▶ planner ─▶ G1 ─▶ ★ GATE A: spec (you) ─▶ architect ─▶ G2 ─▶ [★ stack, first run only]
+idea ─▶ planner ─▶ G1 ─▶ ★ GATE A: spec (you)
+     ─▶ UX designer ─▶ architect ─▶ threat modeller ─▶ G2 ─▶ ★ GATE D: design + residual risk (+ stack, first run) (you)
      ─▶ for each task: developer ─▶ tester ─▶ reviewer ─▶ G3 ─▶ merge into feature/<run>
      ─▶ security + performance ─▶ G4
      ─▶ release(prepare) ─▶ auditor ─▶ G5 ─▶ ★ GATE B: release PR (you, on GitHub) ─▶ release(ship)
@@ -27,6 +29,26 @@ idea ─▶ planner ─▶ G1 ─▶ ★ GATE A: spec (you) ─▶ architect ─
    gh repo edit greavemr-svg/agent-project-template --template
    ```
    Keep this folder: improvements to the kit go here, and new projects get them.
+
+## Using Figma designs (optional)
+
+1. Once, in PowerShell: `claude plugin install figma@claude-plugins-official`,
+   restart Claude Code, type `/plugin`, choose **figma**, sign in to Figma.
+   Figma says Full and Dev seats can use it; other seats may be rate-limited.
+2. When you give the orchestrator an idea, include the Figma file link and a
+   frame link per screen (right-click a frame → Copy link to selection).
+3. No Figma connector? Export each frame as PNG into `docs/ux/figma/` and say
+   so in the idea. The UX designer reads the images (colours and spacing are
+   then estimates).
+
+## Security by design
+
+Every run gets a threat model (STRIDE) before any code is written, with a
+security profile from OWASP MASVS (the app) and OWASP ASVS (any backend), and
+testable security requirements (SR1, SR2…) assigned to tasks and proved by
+tests. The pipeline's mapping to NIST SSDF is in
+`docs/governance/security-by-design.md`. At Gate D you explicitly accept any
+residual risk; Critical risks can't be accepted.
 
 ## Each new project (about 5 minutes)
 
@@ -60,10 +82,10 @@ Store or production deployment stays manual on purpose.
 |---|---|
 | `docs/project.md` | Product, stack and exact commands. Filled in by the first run, approved by you |
 | `CLAUDE.md` | Rules every agent follows |
-| `.claude/agents/` | The 11 agents |
+| `.claude/agents/` | The 13 agents |
 | `.claude/hooks/` | Enforcement scripts |
 | `docs/governance/` | Pipeline, gate criteria, Definitions of Ready and Done, standards, release checklist |
-| `docs/specs/`, `docs/design/`, `docs/adr/` | What was decided and why |
+| `docs/specs/`, `docs/ux/`, `docs/design/`, `docs/adr/`, `docs/security/` | What was decided and why: spec, UX, design, decisions, threat models |
 | `docs/runs/<run-id>/` | Run state (resumable) and audit report |
 | `.github/` | PR template, CODEOWNERS, CI, governance check |
 
@@ -89,6 +111,6 @@ merge through a PR. For Claude's help, launch it with
 `GOVERNANCE_OWNER_OVERRIDE=1` (logged). Make kit-wide improvements in the
 template repo so future projects inherit them.
 
-**Cost:** runs are capped at 60 agent invocations. Opus runs the orchestrator,
+**Cost:** runs are capped at 120 agent invocations. Opus runs the orchestrator,
 planner, architect and reviewer; Sonnet does the volume work; Haiku writes the
 audit. Change `model:` in an agent file to trade quality for cost.

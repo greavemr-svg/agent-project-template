@@ -23,6 +23,11 @@
 | AC1 | … | … | … | unit / integration / manual |
 | AC2 | … | … | … | … |
 
+## Design sources
+- Figma file: <link, or "none">
+- Frames: <one link per screen/flow, from Figma "Copy link to selection">
+- Exports: <files in docs/ux/figma/, or "none">
+
 ## Non-functional requirements
 - Performance: <target, or "project defaults">
 - Accessibility: …
@@ -30,6 +35,7 @@
 - Security: …
 
 ## Data and privacy
+<!-- The threat modeller sets the security profile from this. Be specific. -->
 <What personal data is created, stored, displayed or sent; where it lives; how long; who can see it. "None" if none.>
 
 ## Assumptions

@@ -25,7 +25,10 @@ owner's change requests.
 2. Write `docs/specs/<run-id>.md` from the template. Every acceptance
    criterion is in Given / When / Then form and independently testable.
 3. Name what is out of scope explicitly. Record assumptions as assumptions.
-4. List non-functional requirements (performance, security, accessibility,
+4. If the owner has Figma designs, record the file and frame links in the
+   spec's "Design sources" section (ask for them if the idea mentions designs
+   but gives no links). Note any constraints the designs imply.
+5. List non-functional requirements (performance, security, accessibility,
    data/privacy) or state "none beyond project defaults".
 
 ## Must not

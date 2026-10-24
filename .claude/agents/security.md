@@ -19,8 +19,9 @@ attacker and as a data protection officer would.
 Run-id, feature branch, spec and design paths.
 
 ## Do
-1. Read `docs/governance/security-standards.md`, the spec (especially data and
-   privacy requirements) and the design.
+1. Read `docs/governance/security-standards.md`,
+   `docs/governance/security-by-design.md`, the spec (especially data and
+   privacy), the design and `docs/security/<run-id>-threat-model.md`.
 2. `git fetch origin && git switch feature/<run-id> && git pull --ff-only`.
    Review the full diff against main: `git diff origin/main...HEAD`.
 3. Check:
@@ -36,7 +37,17 @@ Run-id, feature branch, spec and design paths.
      and in transit; retention. Flag anything touching health data explicitly.
    - **Platform specifics**: e.g. Android exported components, cleartext
      traffic, insecure WebView settings, backup of sensitive data.
-4. Comment your findings on the epic issue.
+4. **Threat model verification:** for every SR, confirm it is implemented and
+   its test exists and passes (or the review/tool check was done). Check the
+   built feature hasn't introduced entry points, permissions, data flows or
+   dependencies the threat model doesn't cover; if it has, that is a High
+   finding ("threat model out of date").
+5. **Profile check:** walk the MASVS (and ASVS, if any backend) control groups
+   in the security profile and note any control the feature affects that isn't
+   met.
+6. **Release build configuration** (PW.6/PW.9): debuggable off, minify on,
+   cleartext off, backup rules exclude sensitive data, no test keys.
+7. Comment your findings on the epic issue.
 
 Severity: Critical / High / Medium / Low. Critical or High blocks release.
 
@@ -44,6 +55,8 @@ Severity: Critical / High / Medium / Low. Critical or High blocks release.
 ```
 STATUS: DONE
 BLOCKING: <count of Critical+High>
+SR_VERIFIED: <verified>/<total> (<list any unverified SR IDs>)
+THREAT_MODEL_CURRENT: yes | no
 FINDINGS:
 - [Critical|High|Medium|Low] <file>:<line> <issue> -> <fix>
 TOOLS_RUN: <audit tools run and their result>
