@@ -9,7 +9,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "scripts/*" "eng/*" "global.json" "*/global.json" "Directory.Build.props" "Directory.Build.targets" "Directory.Packages.props" "nuget.config" "NuGet.config" ".config/dotnet-tools.json" ".gitignore" ".gitattributes" ".editorconfig" "docs/devops/*" ".evidence/*" "gradle.properties" "gradle/wrapper/gradle-wrapper.properties"
+          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "scripts/*" "eng/*" "global.json" "*/global.json" "Directory.Build.props" "Directory.Build.targets" "Directory.Packages.props" "nuget.config" "NuGet.config" ".config/dotnet-tools.json" ".gitignore" ".gitattributes" ".editorconfig" "docs/devops/*" ".evidence/*" "gradle.properties" "gradle/wrapper/gradle-wrapper.properties" ".worktrees/*/scripts/*" ".worktrees/*/eng/*" ".worktrees/*/global.json" ".worktrees/*/Directory.Build.props" ".worktrees/*/Directory.Build.targets" ".worktrees/*/Directory.Packages.props" ".worktrees/*/nuget.config" ".worktrees/*/NuGet.config" ".worktrees/*/.config/dotnet-tools.json" ".worktrees/*/.gitignore" ".worktrees/*/.gitattributes" ".worktrees/*/.editorconfig" ".worktrees/*/docs/devops/*" ".worktrees/*/.evidence/*" ".worktrees/*/gradle.properties" ".worktrees/*/gradle/wrapper/gradle-wrapper.properties"
     - matcher: "Bash"
       hooks:
         - type: command

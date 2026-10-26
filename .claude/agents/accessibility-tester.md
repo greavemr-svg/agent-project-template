@@ -9,7 +9,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "docs/a11y/*" ".evidence/*" "*Accessibility*Test*" "*/a11y/*test*" "*/a11y/*Test*" "*A11y*Test*"
+          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "docs/a11y/*" ".evidence/*" "*Accessibility*Test*" "*/a11y/*test*" "*/a11y/*Test*" "*A11y*Test*" ".worktrees/*/docs/a11y/*" ".worktrees/*/.evidence/*"
     - matcher: "Bash"
       hooks:
         - type: command

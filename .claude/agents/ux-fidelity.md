@@ -9,7 +9,7 @@ hooks:
     - matcher: "Edit|Write"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "docs/ux/fidelity/*" ".evidence/*"
+          command: bash "$CLAUDE_PROJECT_DIR/.claude/hooks/restrict-writes.sh" "docs/ux/fidelity/*" ".evidence/*" ".worktrees/*/docs/ux/fidelity/*" ".worktrees/*/.evidence/*"
     - matcher: "Bash"
       hooks:
         - type: command
