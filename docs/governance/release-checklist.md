@@ -11,7 +11,10 @@ unticked box.
 - [ ] Every security requirement (SR) implemented and verified (link: threat model, security report)
 - [ ] Threat model current for what this release changes; residual risks accepted at Gate D
 - [ ] Release build config: debuggable off, minify on, cleartext off, sensitive data excluded from backup
-- [ ] Screens match the UX design, including error/empty/offline states and accessibility
+- [ ] Screens match the UX design, including error/empty/offline states: every fidelity report is MATCH (link: docs/ux/fidelity/<run-id>/)
+- [ ] Accessibility: every accessibility report is PASS, and the manual screen-reader checks are done or listed below (link: docs/a11y/<run-id>/)
+- [ ] DAST: PASS or NOT_APPLICABLE (link: docs/security/dast/<run-id>.md)
+- [ ] Privacy impact assessment current; residual privacy risks accepted at Gate D; DPO consultation status stated (link: docs/privacy/<run-id>-pia.md)
 - [ ] Performance: PASS or NOT_APPLICABLE (link: docs/perf/<run-id>/)
 - [ ] Version bumped per SemVer: `vX.Y.Z`
 - [ ] CHANGELOG.md updated
@@ -20,6 +23,8 @@ unticked box.
 - [ ] Data or schema migrations, if any, are tested and reversible
 - [ ] Audit complete: docs/runs/<run-id>/audit.md, flags listed below
 - [ ] Manual checks, if the spec has any, done and recorded
+- [ ] User, operator and stakeholder docs updated (link: docs/stakeholder/<run-id>.md)
+- [ ] Look-ahead for the next stage and retrospective written (links: docs/lookahead/<run-id>-end.md, docs/runs/<run-id>/retro.md)
 
 ## Audit flags for the owner
 <List each flag from audit.md, or "None">

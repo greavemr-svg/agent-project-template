@@ -33,14 +33,23 @@ Run-id, epic issue number.
 3. Write `docs/runs/<run-id>/audit.md` with:
    - **Traceability matrix**: AC → screen → task → issue → PR → test(s) → status.
    - **Security traceability**: threat → SR → control ID → task → test/check →
-     security agent verification. Residual risks with the owner's Gate D
-     acceptance.
+     security agent verification → DAST verification (where the SR needs it).
+     Residual risks with the owner's Gate D acceptance.
+   - **Privacy traceability**: PIA data item → control → SR → test, residual
+     privacy risks with the owner's acceptance, and the recorded DPO
+     consultation status.
+   - **UX evidence**: screen → task → fidelity verdict → accessibility verdict
+     → report path, and the manual accessibility checks with whether the
+     owner has recorded them as done.
+   - **Environment incidents**: each devops diagnosis, its cause, fix PR or
+     owner action, and whether it was resolved.
    - **Gate record**: each gate (G1-G5, Gate A, Gate D, Gate B) with result,
      timestamp and evidence link. Gate A/B must show the owner's recorded
      approval.
    - **Separation of duties**: confirm no PR was reviewed by the agent that
-     wrote it, tests were written by the tester, nothing reached main except
-     through the release PR.
+     wrote it, tests were written by the tester (accessibility tests by the
+     accessibility-tester), every reviewer verdict and G3 pass is newer than
+     the last commit, and nothing reached main except through the release PR.
    - **Exceptions**: retries, escalations, descoped tasks, owner overrides.
    - **Flags**: anything skipped, missing evidence, guard-blocked actions in
      the event log, or inconsistencies between state.json and GitHub.

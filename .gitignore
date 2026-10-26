@@ -5,3 +5,6 @@
 .env.*
 *.keystore
 *.jks
+
+# Fidelity, accessibility and DAST evidence (governance pack 3)
+.evidence/

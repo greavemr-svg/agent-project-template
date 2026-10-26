@@ -10,12 +10,16 @@
 - [ ] No new dependency without an accepted ADR
 - [ ] No secrets or real personal data anywhere in the change
 - [ ] Public behaviour changes are reflected in docs / README where relevant
+- [ ] Screens built or changed: fidelity check MATCH and accessibility check PASS (WCAG 2.2 AA), each with its report on the branch
 - [ ] PR title is a Conventional Commit and the PR links its issue and spec
 
 ## A feature is done when
 - [ ] Every task is done, or descoped by the owner with the decision recorded
 - [ ] Every AC in the spec traces to a merged PR and a test
 - [ ] Security review has no open Critical or High findings
+- [ ] DAST (if there is a server or API) has no open Critical or High findings
+- [ ] Privacy impact assessment is current; residual privacy risks accepted by the owner at Gate D
+- [ ] User, operator and stakeholder docs describe what was merged
 - [ ] Performance shows no regression beyond the thresholds below
 
 ## Performance thresholds

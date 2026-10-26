@@ -2,6 +2,7 @@
   "run_id": "",
   "idea": "",
   "status": "in_progress",
+  "mode": "feature",
   "stage": "plan",
   "created_at": "",
   "epic_issue": null,
@@ -10,13 +11,19 @@
     "spec": "",
     "design": "",
     "adrs": [],
-    "audit": ""
+    "audit": "",
+    "ux": "",
+    "threat_model": "",
+    "pia": "",
+    "lookahead": [],
+    "retro": ""
   },
   "gates": {
     "G1": null,
     "spec_approval": null,
     "G2": null,
     "design_approval": null,
+    "dpo_consultation": null,
     "stack_approval": null,
     "G4": null,
     "G5": null,
@@ -30,7 +37,8 @@
     "url": ""
   },
   "counters": {
-    "agent_invocations": 0
+    "agent_invocations": 0,
+    "invocation_limit": 160
   },
   "log": [],
   "_examples": {
@@ -42,13 +50,26 @@
       "pr": null,
       "status": "pending | in_progress | done | descoped",
       "attempts": 0,
-      "G3": null
+      "G3": null,
+      "builder": "developer | maintenance",
+      "screens": [],
+      "fidelity": "MATCH | MISMATCH | no screens",
+      "a11y": "PASS | FAIL | no screens"
     },
     "gate_result": {
       "result": "PASS",
       "at": "2026-01-01T12:00:00Z",
       "evidence": "gatekeeper JSON or owner's words verbatim"
     },
-    "log_entry": "2026-01-01T12:00:00Z developer T1 attempt 1: DONE PR #12"
-  }
+    "log_entry": "2026-01-01T12:00:00Z developer T1 attempt 1: DONE PR #12",
+    "env_incident": {
+      "at": "2026-01-01T12:00:00Z",
+      "task": 1,
+      "cause": "repo-config",
+      "fix": "PR #20",
+      "resolved": true
+    }
+  },
+  "owner_actions_pending": [],
+  "env_incidents": []
 }

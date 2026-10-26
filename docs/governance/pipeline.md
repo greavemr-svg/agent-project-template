@@ -12,14 +12,23 @@ a `governance/*` branch PR.
 | ux-designer | User flows, screen specs, design system (from Figma when supplied) | `docs/ux/` | Change requirements, override Figma |
 | architect | Design, ADRs, task breakdown | `docs/design/`, `docs/adr/`, `docs/project.md` | Change requirements, write code |
 | threat-modeler | Threat model, security profile, security requirements | `docs/security/` | Accept risk, weaken the profile |
+| privacy-assessor | Privacy impact assessment, residual privacy risks, DPO questions | `docs/privacy/` | Accept risk, claim legal compliance |
+| look-ahead | Upcoming decisions, prerequisites, readiness for the next stage | `docs/lookahead/` | Make decisions |
 | developer | Implementation, PR | Application code + unit tests | Merge, approve, touch governance |
+| maintenance | Dependency / SDK / tool survey and upgrades (maintenance runs) | Like developer; survey writes `docs/maintenance/` | Upgrade outside the approved plan, accept excluded licences |
 | tester | Acceptance and edge-case tests | Test files only | Change application code |
+| ux-fidelity | Built screens vs UX design and Figma | `docs/ux/fidelity/` | Change code or design |
+| accessibility-tester | WCAG 2.2 AA checks, accessibility tests | `docs/a11y/`, accessibility test files | Change application code |
+| devops | Toolchain, build-script and environment fixes; CI changes drafted for the owner | Build scripts, toolchain config, `docs/devops/` | Edit `.github/`, weaken checks, install system software |
 | reviewer | Code review verdict | Nothing (read-only) | Change code, approve on GitHub |
 | gatekeeper | Gate decisions G1-G5 | Nothing (read-only) | Waive a criterion |
 | security | Feature security review | Nothing (read-only) | Fix findings |
+| security-tester | Dynamic testing (DAST) of the local server/API | `docs/security/dast/` | Test anything but local or owner-named test targets |
 | performance | Benchmarks vs baseline | `docs/perf/<run-id>/` | Overwrite the baseline |
+| tech-writer | README, user / operator guides, stakeholder summary | `README.md`, `docs/guides/`, `docs/stakeholder/` | Document unmerged behaviour |
 | release | Merges, versioning, release | Changelog, release notes, version files | Merge to main without owner approval |
 | auditor | Audit trail | `docs/runs/<run-id>/audit.md` | Soften flags |
+| retrospective | Run metrics and improvement proposals | `docs/runs/<run-id>/retro.md`, `docs/metrics/` | Change rules (proposes only) |
 | **owner (you)** | Gate A, Gate B, governance | Everything | — |
 
 Separation of duties: no agent reviews, tests or gates its own work; only the
@@ -28,20 +37,29 @@ owner approves what reaches `main`.
 ## Flow
 
 ```
-idea → planner → G1 → GATE A (owner: spec)
-     → ux-designer → architect → threat-modeler (↺ architect) → G2 → GATE D (owner: design + residual risk)
-     → per task: developer → tester → reviewer → G3 → merge into feature/<run>
-     → security + performance → G4
-     → release(prepare) → auditor → G5 → GATE B (owner, on GitHub)
+idea → planner → G1 → look-ahead(start) → GATE A (owner: spec)
+     → ux-designer → architect → threat-modeler (↺ architect) → privacy-assessor (↺ threat-modeler / architect)
+     → G2 → GATE D (owner: design + residual security and privacy risk)
+     → per task: developer → tester → [ux-fidelity → accessibility-tester, if screens] → reviewer → G3 → merge into feature/<run>
+     → security + security-tester (DAST, if a server) + performance → G4
+     → tech-writer → release(prepare) → look-ahead(end) → auditor → retrospective → G5 → GATE B (owner, on GitHub)
      → release(ship): merge to main, tag, GitHub release
+devops: on any environment failure.  maintenance: replaces the developer in maintenance runs.
 ```
 
 New projects: the first run is a **bootstrap run** (when `docs/project.md`
 says `NOT SET UP`). Its Gate D also covers the stack, and its
 first task is a walking skeleton. See the orchestrator's bootstrap section.
 
-Retries: max 3 attempts per task, then the owner decides. Max 8 tasks and 120
-agent invocations per run.
+Retries: max 3 attempts per task, then the owner decides. Max 8 tasks and 160
+agent invocations per run (or the owner's recorded `counters.invocation_limit`).
+Environment failures handled by devops don't count as task attempts.
+
+**Maintenance runs** (`"mode": "maintenance"`) keep dependencies, SDKs and
+tools current: the maintenance agent's survey feeds the planner, and the
+maintenance agent replaces the developer. All gates apply; G2.7, G2.8 and G2.12
+may be marked "not applicable: maintenance run" when no screens or personal
+data handling change.
 
 ## Gate criteria
 
@@ -74,13 +92,16 @@ evidence.
 - G2.9 `docs/security/<run-id>-threat-model.md` exists, follows the template, and states the security profile with a reason.
 - G2.10 Every threat rated Medium or above has at least one testable SR, mapped to a MASVS/ASVS control ID, a task and a verification method.
 - G2.11 No Critical threat is left as a residual risk; the principles check has no open finding.
+- G2.12 `docs/privacy/<run-id>-pia.md` exists: either a screening result showing no personal data, or a full PIA in which every personal data item has a purpose, basis (marked for DPO confirmation), storage locations and a retention period or trigger.
+- G2.13 Every privacy control that needs software maps to an SR in the threat model; residual privacy risks and DPO questions are listed for Gate D.
 
 ### Bootstrap runs
 - `docs/adr/0001-technology-stack.md` accepted and `docs/project.md` complete, approved by the owner at Gate D and recorded in `state.json`.
 - Task 1 is the walking skeleton and merges before any other task starts.
 
 ### Gate D — owner approves the design and accepts residual risk (human)
-- Owner's approval of the screens, tasks and security profile, and explicit acceptance of each listed residual risk, recorded verbatim with UTC timestamp in `state.json`.
+- Owner's approval of the screens, tasks and security profile, and explicit acceptance of each listed residual security and privacy risk, recorded verbatim with UTC timestamp in `state.json`.
+- The owner's answer on DPO consultation (done, or proceeding while pending), recorded verbatim.
 - On bootstrap runs this is also the stack approval.
 
 ### G3 — Task done (per PR)
@@ -92,6 +113,8 @@ evidence.
 - G3.6 No files changed outside the task's scope without a stated reason; no unapproved dependency; no test skipped, deleted or weakened.
 - G3.7 Every SR assigned to the task is implemented and has a named `SR<n>_…` test, or a recorded review/tool check.
 - G3.8 Screens built in this task match the UX design, including all states.
+- G3.9 Tasks that build or change screens: the latest ux-fidelity comment on the PR is `FIDELITY: MATCH`, newer than the last application-code commit, with `docs/ux/fidelity/<run-id>/T<n>.md` on the branch. Tasks without screens: "no screens" recorded in state.json.
+- G3.10 Tasks that build or change screens: the latest accessibility comment is `A11Y: PASS`, newer than the last application-code commit, with `docs/a11y/<run-id>/T<n>.md` on the branch and no open Blocker or Major. Manual checks it lists are in `owner_actions_pending`.
 
 ### G4 — Feature done
 - G4.1 Every task is `done`, or `descoped` with the owner's recorded decision.
@@ -99,6 +122,7 @@ evidence.
 - G4.3 Security: zero open Critical or High findings.
 - G4.6 Security agent reports every SR verified and the threat model current.
 - G4.4 Performance: `PASS` or `NOT_APPLICABLE`; `NO_BASELINE` only with the proposed baseline recorded.
+- G4.7 DAST: `docs/security/dast/<run-id>.md` shows `PASS` with zero open Critical or High findings, or `NOT_APPLICABLE` because the project has no server or API. `BLOCKED` fails this criterion.
 - G4.5 Every AC in the spec traces to a merged PR and a test, or to a recorded descope.
 
 ### G5 — Release ready
@@ -107,6 +131,8 @@ evidence.
 - G5.3 Every item in `release-checklist.md` is ticked in the PR body, with no `- [ ]` left.
 - G5.4 `docs/runs/<run-id>/audit.md` exists; every flag is either resolved or listed in the PR body for the owner.
 - G5.5 CI is green on the release PR.
+- G5.6 User and stakeholder docs updated for this run (`docs/stakeholder/<run-id>.md` exists; README and guides changed where behaviour changed), or the tech-writer's GAPS are listed in the PR body.
+- G5.7 `docs/lookahead/<run-id>-end.md` and `docs/runs/<run-id>/retro.md` are on the release branch.
 
 ### Gate B — owner approves the release (human)
 - Owner approves the release PR **on GitHub** after reading the audit summary.
